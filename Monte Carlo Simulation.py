@@ -38,16 +38,16 @@ class Stock:
 
 def intializing_matrix(random_seed, matrix_shape):   
     np.random.seed(random_seed)
-    price_paths_matrix = np.random.normal( 0, 1, matrix_shape)
+    matrix = np.random.normal( 0, 1, matrix_shape)
     initial_price = stock.dataframe['Close'].iloc[-1]
-    price_paths_matrix[0] = initial_price
+    matrix[0] = initial_price
     
-    return price_paths_matrix
+    return matrix
  
 def simulation(drift, volatility, matrix):
     exp_drift = np.exp(drift)
     for t in range(1, matrix.shape[0]):
-        paths_matrix[t] = paths_matrix[t-1] * exp_drift * np.exp( volatility *paths_matrix[t] )
+        matrix[t] = matrix[t-1] * exp_drift * np.exp( volatility *matrix[t] )
     return paths_matrix
 
 def confidence_interval(mean, std, confidence_level):
@@ -63,7 +63,11 @@ def confidence_interval(mean, std, confidence_level):
     return lower_bound, upper_bound
 
 #Getting Stock data
-stock = Stock('NVDA',"2024-01-01","2024-12-31")
+ticker_name = input("Please input the ticker : ")
+start_date = input("Please input the start date of the historical data period used for calculations : ")
+end_date = input("Please input the end date of the historical data period used for calculations : ")
+
+stock = Stock(ticker_name, start_date, end_date)
 stock_df = stock.preparing_df()
 log_returns = stock.log_returns_calulation('Close')
 days = stock.number_of_days
