@@ -63,9 +63,15 @@ def confidence_interval(mean, std, confidence_level):
     return lower_bound, upper_bound
 
 #Getting Stock data
-ticker_name = input("Please input the ticker : ")
-start_date = input("Please input the start date of the historical data period used for calculations : ")
-end_date = input("Please input the end date of the historical data period used for calculations : ")
+while True : 
+    ticker_name = input("Please input the ticker : ")
+    start_date = input("Please input the start date of the historical data period used for calculations (YYYY-MM-DD): ")
+    end_date = input("Please input the end date of the historical data period used for calculations (YYYY-MM-DD): ")
+    try:
+        stock = Stock(ticker_name, start_date, end_date)
+        break
+    except ValueError:
+        print("Date format is incorrect, make to sure to input it as YYYY-MM-DD")
 
 stock = Stock(ticker_name, start_date, end_date)
 stock_df = stock.preparing_df()
@@ -104,7 +110,7 @@ plt.plot(paths_matrix, alpha = 0.5)
 plt.title(f"Monte Carlo simulation for {stock.ticker} stock price in 2025 ({paths} paths)", fontsize = 12, weight = 'bold')
 plt.xlabel("Time (Days)", weight = 'bold')
 plt.ylabel("Stock Price", weight = 'bold')
-plt.annotate(f"Mean Final Price : {mean_final_prices}", (-10, np.max(final_prices)*(97/100)) ) #Getting the estimated price on the figure
+plt.annotate(f"Mean Final Price : {mean_final_prices}", (-5, np.max(final_prices)*(97/100)) ) #Getting the estimated price on the figure
 plt.plot(mean_paths, color="black", linewidth = 2, label="Mean Path")
 plt.grid(True, alpha = 0.3)
 plt.legend()
@@ -115,5 +121,5 @@ CI_95 = confidence_interval(mean_final_prices, std_final_price, 95)
 CI_99 = confidence_interval(mean_final_prices, std_final_price, 99)
 
 print(f"Estimated price: {round(mean_final_prices,4)}")
-print(f"CI 95% for final price : [{max(0, CI_95[0])}, {CI_95[1]}]")
-print(f"CI 99% for final price :[{max(0, CI_99[0])}, {CI_99[1]}]")
+print(f"CI 95% for final price : [{max(0, round( CI_95[0], 4 ))}, { round(CI_95[1], 4) }]")
+print(f"CI 99% for final price :[{max(0, round( CI_99[0], 4 ))}, { round(CI_99[1], 4 )}]")
